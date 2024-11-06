@@ -1,4 +1,4 @@
-# vite-plugin-svg-icons
+# rsbuild-plugin-svg-icons
 
 **中文** | [English](./README.md)
 
@@ -11,30 +11,26 @@
 
 ## 安装
 
-**node version:** >=12.0.0
-
-**vite version:** >=2.0.0
-
 ```bash
-yarn add vite-plugin-svg-icons -D
+yarn add rsbuild-plugin-svg-icons -D
 # or
-npm i vite-plugin-svg-icons -D
+npm i rsbuild-plugin-svg-icons -D
 # or
-pnpm install vite-plugin-svg-icons -D
+pnpm install rsbuild-plugin-svg-icons -D
 ```
 
 ## 使用
 
-- vite.config.ts 中的配置插件
+- rsbuild.config.ts 中的配置插件
 
 ```ts
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import { pluginSvgIcons } from 'rsbuild-plugin-svg-icons'
 import path from 'path'
 
 export default () => {
   return {
     plugins: [
-      createSvgIconsPlugin({
+      pluginSvgIcons({
         // 指定需要缓存的图标文件夹
         iconDirs: [path.resolve(process.cwd(), 'src/icons')],
         // 指定symbolId格式
@@ -204,19 +200,6 @@ svg 文件名
 - dir/dir2/icon1.svg # icon-dir-dir2-icon1
 ```
 
-## Typescript 支持
-
-如果使用 `Typescript`,你可以在`tsconfig.json`内添加
-
-```json
-// tsconfig.json
-{
-  "compilerOptions": {
-    "types": ["vite-plugin-svg-icons/client"]
-  }
-}
-```
-
 **注意**
 
 虽然用文件夹来区分已经可以很大程度避免重名问题了,但是也会出现`iconDirs`包含多个文件夹，且文件名一样的 svg.
@@ -235,11 +218,3 @@ pnpm run dev
 pnpm run build
 
 ```
-
-## 示例项目
-
-[Vben Admin](https://github.com/anncwb/vue-vben-admin)
-
-## License
-
-[MIT © Vben-2020](./LICENSE)

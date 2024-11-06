@@ -1,4 +1,4 @@
-import { createSymbolId } from '../src/index'
+import { createSymbolId } from '../src/core'
 import { test, expect } from 'vitest'
 
 const TEST_SYMBOL_ID = 'icon-[dir]-[name]'

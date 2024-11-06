@@ -1,4 +1,4 @@
-import { discreteDir } from '../src/index'
+import { discreteDir } from '../src/core'
 import { test, describe, expect } from 'vitest'
 
 describe('discreteDir test', () => {

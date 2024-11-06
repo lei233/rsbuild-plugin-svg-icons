@@ -1,12 +1,11 @@
 {
-  "name": "vite-plugin-svg-icons-monorepo",
+  "name": "rsbuild-plugin-svg-icons-monorepo",
   "private": true,
-  "version": "2.0.1",
+  "version": "0.0.1",
   "license": "MIT",
-  "author": "Vben",
+  "author": "Lei233",
   "scripts": {
     "stub": "pnpm run prepack --filter ./packages -- --stub",
-    "postinstall": "pnpm run stub",
     "log": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "lint:pretty": "pretty-quick --staged",
     "lint:eslint": "eslint \"packages/**/*.{ts,tsx}\" --fix",
@@ -15,24 +14,20 @@
     "test": "vitest"
   },
   "keywords": [
-    "vite",
-    "vite-plugin",
+    "rsbuild",
+    "rsbuild-plugin",
     "svg",
     "sprite",
-    "svgo",
-    "vben"
+    "svgo"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/vbenjs/vite-plugin-svg-icons"
+    "url": "https://github.com/lei233/rsbuild-plugin-svg-icons"
   },
-  "bugs": {
-    "url": "https://github.com/vbenjs/vite-plugin-svg-icons/issues"
-  },
-  "homepage": "https://github.com/vbenjs/vite-plugin-svg-icons/tree/main/#readme",
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
+    "@rsbuild/core": "^1.0.19",
     "@types/html-minifier-terser": "^6.1.0",
     "@types/jsdom": "^16.2.14",
     "@types/node": "^17.0.13",
@@ -49,9 +44,8 @@
     "prettier": "^2.5.1",
     "rimraf": "^3.0.2",
     "tsup": "^5.11.11",
-    "typescript": "^4.5.5",
-    "unbuild": "^0.6.9",
-    "vite": "^2.7.13",
+    "typescript": "^5.6.3",
+    "unbuild": "^2.0.0",
     "vitest": "^0.2.5"
   },
   "lint-staged": {

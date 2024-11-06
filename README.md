@@ -1,4 +1,4 @@
-# vite-plugin-svg-icons
+# rsbuild-plugin-svg-icons
 
 **English** | [中文](./README.zh_CN.md)
 
@@ -11,30 +11,26 @@ Used to generate svg sprite map.
 
 ## Installation (yarn or npm)
 
-**node version:** >=12.0.0
-
-**vite version:** >=2.0.0
-
 ```bash
-yarn add vite-plugin-svg-icons -D
+yarn add rsbuild-plugin-svg-icons -D
 # or
-npm i vite-plugin-svg-icons -D
+npm i rsbuild-plugin-svg-icons -D
 # or
-pnpm install vite-plugin-svg-icons -D
+pnpm install rsbuild-plugin-svg-icons -D
 ```
 
 ## Usage
 
-- Configuration plugin in vite.config.ts
+- Configuration plugin in rsbuild.config.ts
 
 ```ts
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import { pluginSvgIcons } from 'rsbuild-plugin-svg-icons'
 import path from 'path'
 
 export default () => {
   return {
     plugins: [
-      createSvgIconsPlugin({
+      pluginSvgIcons({
         // Specify the icon folder to be cached
         iconDirs: [path.resolve(process.cwd(), 'src/icons')],
         // Specify symbolId format
@@ -233,19 +229,6 @@ Then the generated SymbolId is written in the comment
 - dir/dir2/icon1.svg # icon-dir-dir2-icon1
 ```
 
-## Typescript Support
-
-If using `Typescript`, you can add in `tsconfig.json`
-
-```json
-// tsconfig.json
-{
-  "compilerOptions": {
-    "types": ["vite-plugin-svg-icons/client"]
-  }
-}
-```
-
 **Note**
 
 Although the use of folders to distinguish between them can largely avoid the problem of duplicate names, there will also be svgs with multiple folders and the same file name in `iconDirs`.
@@ -264,11 +247,3 @@ pnpm run dev
 pnpm run build
 
 ```
-
-## Sample project
-
-[Vben Admin](https://github.com/anncwb/vue-vben-admin)
-
-## License
-
-[MIT © Vben-2020](./LICENSE)

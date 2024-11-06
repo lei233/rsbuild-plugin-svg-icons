@@ -1,8 +1,8 @@
-import type { OptimizeOptions } from 'svgo'
+import type { Config } from 'svgo'
 
 export type DomInject = 'body-first' | 'body-last'
 
-export interface ViteSvgIconsPlugin {
+export interface RsbuildSvgIconsPlugin {
   /**
    * icons folder, all svg files in it will be converted to svg sprite.
    */
@@ -12,7 +12,7 @@ export interface ViteSvgIconsPlugin {
    * svgo configuration, used to compress svg
    * @default：true
    */
-  svgoOptions?: boolean | OptimizeOptions
+  svgoOptions?: boolean | Config
 
   /**
    * icon format
