@@ -1,6 +1,6 @@
 {
   "name": "rsbuild-plugin-svg-icons",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Rsbuild Plugin for fast creating SVG sprites.",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",

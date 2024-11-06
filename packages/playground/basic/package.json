@@ -1,7 +1,7 @@
 {
   "name": "playground-basic",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "dev": "rsbuild dev",
     "build": "rsbuild build ",
