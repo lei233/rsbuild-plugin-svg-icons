@@ -15,7 +15,8 @@
   "license": "MIT",
   "author": "Vben",
   "files": [
-    "dist"
+    "dist",
+    "client.d.ts"
   ],
   "scripts": {
     "dev": "pnpm unbuild --stub",
@@ -31,11 +32,11 @@
     "svgo"
   ],
   "dependencies": {
-    "@types/svgo": "^3.0.0",
     "svg-baker": "1.7.0",
     "svgo": "^3.3.2"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0"
+    "@types/node": "^22.9.0",
+    "@types/svgo": "^3.0.0"
   }
 }

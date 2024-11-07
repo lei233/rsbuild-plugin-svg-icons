@@ -5,6 +5,7 @@ import fg from 'fast-glob'
 import fs from 'fs'
 import SVGCompiler from 'svg-baker'
 import { optimize } from 'svgo'
+import { XMLNS, XMLNS_LINK } from './constants'
 
 const isWindows = typeof process !== 'undefined' && process.platform === 'win32'
 const windowsSlashRE = /\\/g
@@ -12,17 +13,64 @@ export function normalizePath(id: string): string {
   return path.posix.normalize(isWindows ? id.replace(windowsSlashRE, '/') : id)
 }
 
-export function inject<T>(
-  el: Array<T>,
-  value: T,
-  inject: DomInject = 'body-last',
+export async function createModuleCode(
+  cache: Map<string, FileStats>,
+  svgoOptions: Config,
+  options: RsbuildSvgIconsPlugin,
 ) {
+  const { insertHtml, idSet } = await compilerIcons(cache, svgoOptions, options)
+
+  const xmlns = `xmlns="${XMLNS}"`
+  const xmlnsLink = `xmlns:xlink="${XMLNS_LINK}"`
+  const html = insertHtml
+    .replace(new RegExp(xmlns, 'g'), '')
+    .replace(new RegExp(xmlnsLink, 'g'), '')
+
+  const code = `
+        if (typeof window !== 'undefined') {
+         function loadSvg() {
+           var body = document.body;
+           var svgDom = document.getElementById('${options.customDomId}');
+           if(!svgDom) {
+             svgDom = document.createElementNS('${XMLNS}', 'svg');
+             svgDom.style.position = 'absolute';
+             svgDom.style.width = '0';
+             svgDom.style.height = '0';
+             svgDom.id = '${options.customDomId}';
+             svgDom.setAttribute('xmlns','${XMLNS}');
+             svgDom.setAttribute('xmlns:link','${XMLNS_LINK}');
+             svgDom.setAttribute('aria-hidden',true);
+           }
+           svgDom.innerHTML = ${JSON.stringify(html)};
+           ${domInject(options.inject)}
+         }
+         if(document.readyState === 'loading') {
+           document.addEventListener('DOMContentLoaded', loadSvg);
+         } else {
+           loadSvg()
+         }
+      }
+        `
+  return {
+    // rsbuild dataUri not support next line
+    code: removeNewlines(`${code} export default {}`),
+    idSet: removeNewlines(
+      `export default ${JSON.stringify(Array.from(idSet))}`,
+    ),
+  }
+}
+
+function domInject(inject: DomInject = 'body-last') {
   switch (inject) {
     case 'body-first':
-      return Array.prototype.unshift.call(el, value)
+      return 'body.insertBefore(svgDom, body.firstChild);'
     default:
-      return Array.prototype.push.call(el, value)
+      return 'body.insertBefore(svgDom, body.lastChild);'
   }
+}
+
+function removeNewlines(str: string) {
+  return str.replace(/\n/g, '')
 }
 
 /**
@@ -94,22 +142,29 @@ export async function compilerIcon(
   if (!file) {
     return null
   }
+  try {
+    let content = fs.readFileSync(file, 'utf-8')
+    if (svgOptions) {
+      const { data } = optimize(content, svgOptions)
+      content = data || content
+    }
 
-  let content = fs.readFileSync(file, 'utf-8')
+    // fix cannot change svg color  by  parent node problem
+    content = content.replace(/stroke="[a-zA-Z#0-9]*"/, 'stroke="currentColor"')
 
-  if (svgOptions) {
-    const { data } = optimize(content, svgOptions)
-    content = data || content
+    const svgSymbol = await new SVGCompiler().addSymbol({
+      id: symbolId,
+      content,
+      path: file,
+    })
+    return svgSymbol.render()
+  } catch (error) {
+    throw new Error(
+      `[rsbuild-plugin-svg-icons]: path: ${file}\n error: ${
+        (error as any).message
+      }`,
+    )
   }
-
-  // fix cannot change svg color  by  parent node problem
-  content = content.replace(/stroke="[a-zA-Z#0-9]*"/, 'stroke="currentColor"')
-  const svgSymbol = await new SVGCompiler().addSymbol({
-    id: symbolId,
-    content,
-    path: file,
-  })
-  return svgSymbol.render()
 }
 
 export function createSymbolId(name: string, options: RsbuildSvgIconsPlugin) {

@@ -79,9 +79,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@types/svgo':
-        specifier: ^3.0.0
-        version: 3.0.0
       svg-baker:
         specifier: 1.7.0
         version: 1.7.0
@@ -92,6 +89,9 @@ importers:
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
+      '@types/svgo':
+        specifier: ^3.0.0
+        version: 3.0.0
 
   packages/playground/basic:
     dependencies:

@@ -21,4 +21,16 @@ export default defineConfig({
       symbolId: 'icon-[dir]-[name]',
     }),
   ],
+  tools: {
+    rspack: {
+      module: {
+        rules: [
+          {
+            mimetype: 'data',
+            type: 'asset/resource',
+          },
+        ],
+      },
+    },
+  },
 })

@@ -1,7 +1,11 @@
 import type { Config } from 'svgo'
 import type { RsbuildSvgIconsPlugin, FileStats } from './typing'
-import { SVG_DOM_ID, XMLNS, XMLNS_LINK } from './constants'
-import { compilerIcons, inject } from './core'
+import {
+  SVG_DOM_ID,
+  SVG_ICONS_CLIENT,
+  SVG_ICONS_REGISTER_NAME,
+} from './constants'
+import { createModuleCode } from './core'
 
 export function pluginSvgIcons(opt: RsbuildSvgIconsPlugin) {
   const cache = new Map<string, FileStats>()
@@ -28,35 +32,22 @@ export function pluginSvgIcons(opt: RsbuildSvgIconsPlugin) {
   return {
     name: 'rsbuild:svg-icons',
     setup(api) {
-      api.modifyHTMLTags(async (tags) => {
-        const { insertHtml } = await compilerIcons(
+      api.resolve(async ({ resolveData }) => {
+        const id = resolveData.request
+        if (!/^virtual:svg-icons/.test(id)) return
+        const isRegister = id.endsWith(SVG_ICONS_REGISTER_NAME)
+        const isClient = id.endsWith(SVG_ICONS_CLIENT)
+        const { code, idSet } = await createModuleCode(
           cache,
           svgoOptions as Config,
           options,
         )
-        const xmlns = `xmlns="${XMLNS}"`
-        const xmlnsLink = `xmlns:xlink="${XMLNS_LINK}"`
-        const html = insertHtml
-          .replace(new RegExp(xmlns, 'g'), '')
-          .replace(new RegExp(xmlnsLink, 'g'), '')
-
-        inject(
-          tags.bodyTags,
-          {
-            tag: 'svg',
-            attrs: {
-              id: options.customDomId,
-              xmlns: XMLNS,
-              'xmlns:xlink': XMLNS_LINK,
-              'aria-hidden': true,
-              style: 'position: absolute; width: 0; height: 0',
-            },
-            children: html,
-          },
-          options.inject,
-        )
-
-        return tags
+        if (isRegister) {
+          resolveData.request = `data:text/javascript,${code}`
+        }
+        if (isClient) {
+          resolveData.request = `data:text/javascript,${idSet}`
+        }
       })
     },
   }
