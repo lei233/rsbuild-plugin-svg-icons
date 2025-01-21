@@ -10,6 +10,9 @@
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
+    },
+    "./client": {
+      "types": "./client.d.ts"
     }
   },
   "license": "MIT",
